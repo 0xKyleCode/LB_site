@@ -241,7 +241,7 @@ export const GreenFieldsTheme = createTheme({
     menuItemIconColorActive: colors.layout.sidebar.menuItemIconColorActive,
     menuItemHeadingColor: colors.layout.sidebar.menuItemHeadingColor,
     boxShadow: "1px 0 0 #303e47",
-    width: "290px",
+    width: "0px",
   },
   header: {
     height: "80px",

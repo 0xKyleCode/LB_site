@@ -54,7 +54,7 @@ function App(props: MyAppProps) {
               <title>Personal Liquidity Book Manager</title>
             </NextHead>
 
-            {mounted && <Component {...pageProps} />}
+            {mounted && getLayout(<Component {...pageProps} />)}
           </ConnectKitProvider>
         </WagmiConfig>
       </ThemeProvider>
