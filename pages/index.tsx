@@ -13,6 +13,8 @@ import {
   useTheme,
   styled,
 } from "@mui/material";
+import PageHeader from "@/content/Dashboard/PageHeader";
+import PageTitleWrapper from "@/components/PageTitleWrapper";
 
 const TabsContainerWrapper = styled(Box)(
   ({ theme }) => `
@@ -113,9 +115,11 @@ function DashboardTasks() {
   return (
     <>
       <Head>
-        <title>Tasks Dashboard</title>
+        <title>Personal Liquidity Book</title>
       </Head>
-
+      <PageTitleWrapper>
+        <PageHeader />
+      </PageTitleWrapper>
       <Container maxWidth="lg">
         <TabsContainerWrapper>
           <Tabs

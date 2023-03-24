@@ -1,5 +1,5 @@
 import { Box, alpha, lighten, styled, useTheme } from "@mui/material";
-
+import Logo from "src/components/LogoSign";
 import Account from "./Account";
 
 const HeaderWrapper = styled(Box)(
@@ -44,7 +44,17 @@ function Header() {
               )}`,
       }}
     >
-      <Box display="flex" alignItems="left">
+      <Box display="flex" alignItems="center">
+        <Box
+          mx={2}
+          sx={{
+            width: 52,
+          }}
+        >
+          <Logo />
+        </Box>
+      </Box>
+      <Box display="flex" alignItems="center">
         <Account />
       </Box>
     </HeaderWrapper>
