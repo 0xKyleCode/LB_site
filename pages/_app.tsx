@@ -16,6 +16,9 @@ import { client } from "src/wagmi";
 import CssBaseline from "@mui/material/CssBaseline";
 import { CacheProvider, EmotionCache } from "@emotion/react";
 
+import { ApolloProvider } from "@apollo/client";
+import { useApollo } from "src/graphql/client";
+
 import ThemeProvider from "src/theme/ThemeProvider";
 import createEmotionCache from "src/createEmotionCache";
 
@@ -41,24 +44,28 @@ function App(props: MyAppProps) {
   const [mounted, setMounted] = React.useState(false);
   React.useEffect(() => setMounted(true), []);
 
-  return (
-    <CacheProvider value={emotionCache}>
-      <NextHead>
-        <meta name="viewport" content="initial-scale=1, width=device-width" />
-      </NextHead>
-      <ThemeProvider>
-        <CssBaseline />
-        <WagmiConfig client={client}>
-          <ConnectKitProvider>
-            <NextHead>
-              <title>Personal Liquidity Book Manager</title>
-            </NextHead>
+  const apolloClient = useApollo(pageProps.initialApolloState);
 
-            {mounted && getLayout(<Component {...pageProps} />)}
-          </ConnectKitProvider>
-        </WagmiConfig>
-      </ThemeProvider>
-    </CacheProvider>
+  return (
+    <ApolloProvider client={apolloClient}>
+      <CacheProvider value={emotionCache}>
+        <NextHead>
+          <meta name="viewport" content="initial-scale=1, width=device-width" />
+        </NextHead>
+        <ThemeProvider>
+          <CssBaseline />
+          <WagmiConfig client={client}>
+            <ConnectKitProvider>
+              <NextHead>
+                <title>Personal Liquidity Book Manager</title>
+              </NextHead>
+
+              {mounted && getLayout(<Component {...pageProps} />)}
+            </ConnectKitProvider>
+          </WagmiConfig>
+        </ThemeProvider>
+      </CacheProvider>
+    </ApolloProvider>
   );
 }
 

@@ -1,0 +1,44 @@
+fragment lbPairFields on LBPair {
+  id
+  name
+  binStep
+  baseFeePct
+  tokenXPrice
+  tokenYPrice
+  tokenX {
+    id
+    symbol
+    decimals
+  }
+  tokenY {
+    id
+    symbol
+    decimals
+  }
+  reserveX
+  reserveY
+  totalValueLockedUSD
+  volumeUSD
+  timestamp
+  activeId
+}
+
+query JoeInfo($pair: String!, $user: String!) {
+  liquidityPositions(
+    first: 1000
+    where: { lbPair: $pair, user: $user, binsCount_gt: 0 }
+  ) {
+    id
+    binsCount
+    userBinLiquidities(first: 1000, where: { liquidity_gt: 0 }) {
+      liquidity
+      binId
+    }
+    user {
+      id
+    }
+    lbPair {
+      ...lbPairFields
+    }
+  }
+}

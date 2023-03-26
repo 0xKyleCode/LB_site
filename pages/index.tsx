@@ -15,13 +15,13 @@ import {
 } from "@mui/material";
 import PageHeader from "@/content/Dashboard/PageHeader";
 import PageTitleWrapper from "@/components/PageTitleWrapper";
+import ManageLiquidity from "@/content/Dashboard/Manage";
 
 const TabsContainerWrapper = styled(Box)(
   ({ theme }) => `
       padding: 0 ${theme.spacing(2)};
       position: relative;
       bottom: -1px;
-
       .MuiTabs-root {
         height: 44px;
         min-height: 44px;
@@ -101,11 +101,11 @@ const TabsContainerWrapper = styled(Box)(
 function DashboardTasks() {
   const theme = useTheme();
 
-  const [currentTab, setCurrentTab] = useState<string>("analytics");
+  const [currentTab, setCurrentTab] = useState<string>("manage");
 
   const tabs = [
+    { value: "manage", label: "Manage" },
     { value: "analytics", label: "Analytics Overview" },
-    { value: "taskSearch", label: "Task Search" },
   ];
 
   const handleTabsChange = (_event: ChangeEvent<{}>, value: string): void => {
@@ -135,7 +135,7 @@ function DashboardTasks() {
             ))}
           </Tabs>
         </TabsContainerWrapper>
-        <Card variant="outlined">
+        <Card variant="outlined" sx={{ mb: 10 }}>
           <Grid
             container
             direction="row"
@@ -143,54 +143,8 @@ function DashboardTasks() {
             alignItems="stretch"
             spacing={0}
           >
+            {currentTab === "manage" && <ManageLiquidity />}
             {currentTab === "analytics" && (
-              <>
-                <Grid item xs={12}>
-                  <Box p={4}></Box>
-                </Grid>
-                <Grid item xs={12}>
-                  <Divider />
-                  <Box
-                    p={4}
-                    sx={{
-                      background: `${theme.colors.alpha.black[5]}`,
-                    }}
-                  >
-                    <Grid container spacing={4}>
-                      <Grid item xs={12} sm={6} md={8}></Grid>
-                      <Grid item xs={12} sm={6} md={4}></Grid>
-                    </Grid>
-                  </Box>
-                  <Divider />
-                </Grid>
-                <Grid item xs={12}>
-                  <Box p={4}></Box>
-                  <Divider />
-                </Grid>
-                <Grid item xs={12}>
-                  <Box
-                    sx={{
-                      background: `${theme.colors.alpha.black[5]}`,
-                    }}
-                  >
-                    <Grid container spacing={0}>
-                      <Grid item xs={12} md={6}>
-                        <Box
-                          p={4}
-                          sx={{
-                            background: `${theme.colors.alpha.white[70]}`,
-                          }}
-                        ></Box>
-                      </Grid>
-                      <Grid item xs={12} md={6}>
-                        <Box p={4}></Box>
-                      </Grid>
-                    </Grid>
-                  </Box>
-                </Grid>
-              </>
-            )}
-            {currentTab === "taskSearch" && (
               <Grid item xs={12}>
                 <Box p={4}></Box>
               </Grid>

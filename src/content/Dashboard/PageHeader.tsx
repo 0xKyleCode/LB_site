@@ -38,7 +38,7 @@ const AvatarPageTitle = styled(Avatar)(
 );
 
 function PageHeader() {
-  const { address, isConnected, isDisconnected } = useAccount();
+  const { address, isConnected } = useAccount();
   return (
     <Box
       display="flex"
