@@ -28,7 +28,7 @@ export const useCalcDistribution = (joeData: JoeInfoQuery, prices: Prices) => {
     const totalUSD = avaxUSD + usdtUSD;
 
     const binLiquiditiesUpdate = binLiquidities.map((value) => {
-      if (value.binId < centralBin)
+      if (value.binId > centralBin)
         return {
           binId: Number(value.binId),
           avax: Number(
@@ -36,7 +36,7 @@ export const useCalcDistribution = (joeData: JoeInfoQuery, prices: Prices) => {
           ),
           usdt: 0,
         };
-      else if (value.binId > centralBin)
+      else if (value.binId < centralBin)
         return {
           binId: Number(value.binId),
           avax: 0,
