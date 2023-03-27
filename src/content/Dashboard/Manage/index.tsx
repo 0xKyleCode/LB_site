@@ -5,8 +5,6 @@ import MyLiquidity from "./MyLiquidity";
 import AddLiquidity from "./AddLiquidity";
 import RemoveLiquidity from "./RemoveLiquidity";
 
-import { useJoeInfoQuery } from "src/graphql/generated";
-
 const TabsContainerWrapper = styled(Box)(
   ({ theme }) => `
       position: relative;
