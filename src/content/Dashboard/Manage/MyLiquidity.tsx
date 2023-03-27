@@ -57,6 +57,7 @@ const MyLiquidity: FC = () => {
 
     fetchData();
   }, []);
+
   const distribution = useCalcDistribution(joeData, prices);
 
   useContractRead({
@@ -102,9 +103,23 @@ const MyLiquidity: FC = () => {
         borderColor="grey.800"
         alignItems="center"
       >
-        <Grid xs={12} pb={1}>
+        <Grid xs={6} pb={1}>
           <Typography variant="h4" component="h4">
             Deposit Balance
+          </Typography>
+        </Grid>
+        <Grid container item xs={6} pb={1} justifyContent="flex-end">
+          <Typography variant="h4" component="h4">
+            $
+            {distribution.length > 0
+              ? distribution
+                  .reduce(
+                    (accumulator, currentValue) =>
+                      accumulator + currentValue.avax + currentValue.usdt,
+                    0
+                  )
+                  .toFixed(2)
+              : 0}
           </Typography>
         </Grid>
         <Grid container item xs={4} justifyContent="flex-start">
@@ -170,9 +185,18 @@ const MyLiquidity: FC = () => {
         borderRadius={1}
         borderColor="grey.800"
       >
-        <Grid xs={12} py={1}>
+        <Grid item xs={6} py={1}>
           <Typography variant="h4" component="h4">
             Claimable Fees
+          </Typography>
+        </Grid>
+        <Grid container item xs={6} py={1} justifyContent="flex-end">
+          <Typography variant="h4" component="h4">
+            $
+            {(
+              Number(utils.formatEther(rewardsAvailable.avax)) * prices.AVAX +
+              Number(utils.formatUnits(rewardsAvailable.usdt, 6)) * prices.USDT
+            ).toFixed(2)}
           </Typography>
         </Grid>
         <Grid container item xs={4} justifyContent="flex-start">

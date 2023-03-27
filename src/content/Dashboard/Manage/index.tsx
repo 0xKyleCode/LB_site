@@ -75,12 +75,12 @@ export default function ManageLiquidity() {
 
   return (
     <Grid container spacing={2}>
-      <Grid item xs={6}>
+      <Grid item xs={12} md={6}>
         <Box p={3}>
           <MyLiquidity />
         </Box>
       </Grid>
-      <Grid item xs={6}>
+      <Grid item xs={12} md={6}>
         <Box p={3}>
           <TabsContainerWrapper>
             <Tabs
