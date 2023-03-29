@@ -13,6 +13,7 @@ import { BigNumber, utils } from "ethers";
 type Prices = {
   AVAX: number;
   USDT: number;
+  JOE: number;
 };
 
 type USDPrices = {
@@ -29,13 +30,13 @@ const MyLiquidity: FC = () => {
   const [currentBins, setCurrentBins] = useState<BigNumber[]>([]);
   const [rewardsAvailable, setRewardsAvailable] = useState<{
     avax: BigNumber;
-    usdt: BigNumber;
+    joe: BigNumber;
   }>({
     avax: BigNumber.from(0),
-    usdt: BigNumber.from(0),
+    joe: BigNumber.from(0),
   });
 
-  const [prices, setPrices] = useState<Prices>({ AVAX: 0, USDT: 0 });
+  const [prices, setPrices] = useState<Prices>({ AVAX: 0, USDT: 0, JOE: 0 });
 
   const { loading } = useJoeInfoQuery({
     variables: {
@@ -52,13 +53,18 @@ const MyLiquidity: FC = () => {
       const data = await axios.get<USDPrices>(
         "https://stargate.finance/.netlify/functions/fiat?symbol=USD"
       );
-      setPrices({ AVAX: data.data.USD.AVAX, USDT: data.data.USD.USDT });
+      setPrices({
+        AVAX: data.data.USD.AVAX,
+        USDT: data.data.USD.USDT,
+        JOE: data.data.USD.JOE,
+      });
     };
 
     fetchData();
   }, []);
 
   const distribution = useCalcDistribution(joeData, prices);
+  console.log(distribution);
 
   useContractRead({
     abi: StrategyTJLiquidityBookLB__factory.abi,
@@ -75,7 +81,7 @@ const MyLiquidity: FC = () => {
     functionName: "rewardsAvailable",
     args: [currentBins],
     onSuccess(data) {
-      setRewardsAvailable({ avax: data.rewardsX, usdt: data.rewardsY });
+      setRewardsAvailable({ avax: data.rewardsY, joe: data.rewardsX });
     },
   });
   return (
@@ -115,7 +121,34 @@ const MyLiquidity: FC = () => {
               ? distribution
                   .reduce(
                     (accumulator, currentValue) =>
-                      accumulator + currentValue.avax + currentValue.usdt,
+                      accumulator + currentValue.avax + currentValue.joe,
+                    0
+                  )
+                  .toFixed(2)
+              : 0}
+          </Typography>
+        </Grid>
+
+        <Grid container item xs={4} justifyContent="flex-start" pb={1}>
+          <Stack direction="row" spacing={1} alignItems="center">
+            <Image
+              src="static/icons/joe.svg"
+              height={24}
+              width={24}
+              alt="JOE"
+            />{" "}
+            <Typography variant="h5" component="h5">
+              JOE
+            </Typography>
+          </Stack>
+        </Grid>
+        <Grid container item xs={8} justifyContent="flex-end">
+          <Typography variant="h4" component="h4">
+            {distribution.length > 0
+              ? distribution
+                  .reduce(
+                    (accumulator, currentValue) =>
+                      accumulator + currentValue.joe / prices.JOE,
                     0
                   )
                   .toFixed(2)
@@ -148,32 +181,6 @@ const MyLiquidity: FC = () => {
               : 0}
           </Typography>
         </Grid>
-        <Grid container item xs={4} justifyContent="flex-start" pt={1}>
-          <Stack direction="row" spacing={1} alignItems="center">
-            <Image
-              src="static/icons/tether.svg"
-              height={24}
-              width={24}
-              alt="USDT"
-            />{" "}
-            <Typography variant="h5" component="h5">
-              USDT
-            </Typography>
-          </Stack>
-        </Grid>
-        <Grid container item xs={8} justifyContent="flex-end">
-          <Typography variant="h4" component="h4">
-            {distribution.length > 0
-              ? distribution
-                  .reduce(
-                    (accumulator, currentValue) =>
-                      accumulator + currentValue.usdt / prices.USDT,
-                    0
-                  )
-                  .toFixed(2)
-              : 0}
-          </Typography>
-        </Grid>
       </Grid>
       <Grid
         container
@@ -195,8 +202,26 @@ const MyLiquidity: FC = () => {
             $
             {(
               Number(utils.formatEther(rewardsAvailable.avax)) * prices.AVAX +
-              Number(utils.formatUnits(rewardsAvailable.usdt, 6)) * prices.USDT
+              Number(utils.formatEther(rewardsAvailable.joe)) * prices.JOE
             ).toFixed(2)}
+          </Typography>
+        </Grid>
+        <Grid container item xs={4} justifyContent="flex-start" pb={1}>
+          <Stack direction="row" spacing={1} alignItems="center">
+            <Image
+              src="static/icons/joe.svg"
+              height={24}
+              width={24}
+              alt="JOE"
+            />{" "}
+            <Typography variant="h5" component="h5">
+              JOE
+            </Typography>
+          </Stack>
+        </Grid>
+        <Grid container item xs={8} justifyContent="flex-end">
+          <Typography variant="h4" component="h4">
+            {Number(utils.formatEther(rewardsAvailable.joe)).toFixed(2)}
           </Typography>
         </Grid>
         <Grid container item xs={4} justifyContent="flex-start">
@@ -215,24 +240,6 @@ const MyLiquidity: FC = () => {
         <Grid container item xs={8} justifyContent="flex-end">
           <Typography variant="h4" component="h4">
             {Number(utils.formatEther(rewardsAvailable.avax)).toFixed(2)}
-          </Typography>
-        </Grid>
-        <Grid container item xs={4} justifyContent="flex-start" pt={1}>
-          <Stack direction="row" spacing={1} alignItems="center">
-            <Image
-              src="static/icons/tether.svg"
-              height={24}
-              width={24}
-              alt="USDT"
-            />{" "}
-            <Typography variant="h5" component="h5">
-              USDT
-            </Typography>
-          </Stack>
-        </Grid>
-        <Grid container item xs={8} justifyContent="flex-end">
-          <Typography variant="h4" component="h4">
-            {Number(utils.formatUnits(rewardsAvailable.usdt, 6)).toFixed(2)}
           </Typography>
         </Grid>
       </Grid>

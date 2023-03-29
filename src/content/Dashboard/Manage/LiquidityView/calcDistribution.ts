@@ -7,6 +7,7 @@ import { contracts } from "@/util/constants";
 type Prices = {
   AVAX: number;
   USDT: number;
+  JOE: number;
 };
 
 export const useCalcDistribution = (joeData: JoeInfoQuery, prices: Prices) => {
@@ -21,30 +22,35 @@ export const useCalcDistribution = (joeData: JoeInfoQuery, prices: Prices) => {
   });
 
   if (!isLoading && centralBinData) {
-    const avaxReserves = Number(utils.formatEther(centralBinData?.reserveX));
-    const usdtReserves = Number(utils.formatUnits(centralBinData?.reserveY, 6));
+    const joeReserves = Number(utils.formatEther(centralBinData?.reserveX));
+    const avaxReserves = Number(utils.formatEther(centralBinData?.reserveY));
     const avaxUSD = avaxReserves * prices.AVAX;
-    const usdtUSD = usdtReserves * prices.USDT;
-    const totalUSD = avaxUSD + usdtUSD;
-
+    const joeUSD = joeReserves * prices.JOE;
+    const totalUSD = avaxUSD + joeUSD;
+    console.log(joeUSD / totalUSD);
     const binLiquiditiesUpdate = binLiquidities.map((value) => {
-      if (value.binId > centralBin)
+      if (value.binId < centralBin)
         return {
           binId: Number(value.binId),
           avax: Number(
             (
-              Number(utils.formatUnits(value.liquidity, 6)) *
-              (1 - (0.2 * (value.binId - centralBin)) / 100)
+              Number(utils.formatEther(value.liquidity)) *
+              prices.AVAX *
+              (1 + (0.15 * (value.binId - centralBin)) / 100)
             ).toFixed(2)
           ),
-          usdt: 0,
+          joe: 0,
         };
-      else if (value.binId < centralBin)
+      else if (value.binId > centralBin)
         return {
           binId: Number(value.binId),
           avax: 0,
-          usdt: Number(
-            Number(utils.formatUnits(value.liquidity, 6)).toFixed(2)
+          joe: Number(
+            (
+              Number(utils.formatEther(value.liquidity)) *
+              prices.AVAX *
+              (1 - (0.15 * (value.binId - centralBin)) / 100)
+            ).toFixed(2)
           ),
         };
       else
@@ -53,13 +59,15 @@ export const useCalcDistribution = (joeData: JoeInfoQuery, prices: Prices) => {
           avax: Number(
             (
               (avaxUSD / totalUSD) *
-              Number(utils.formatUnits(value.liquidity, 6))
+              Number(utils.formatEther(value.liquidity)) *
+              prices.AVAX
             ).toFixed(2)
           ),
-          usdt: Number(
+          joe: Number(
             (
-              (usdtUSD / totalUSD) *
-              Number(utils.formatUnits(value.liquidity, 6))
+              (joeUSD / totalUSD) *
+              Number(utils.formatEther(value.liquidity)) *
+              prices.AVAX
             ).toFixed(2)
           ),
         };

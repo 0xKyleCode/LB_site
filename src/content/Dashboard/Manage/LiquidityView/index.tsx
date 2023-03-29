@@ -29,7 +29,7 @@ const DotPrimary = styled("span")(
 type BinDistribution = {
   binId: number;
   avax: number;
-  usdt: number;
+  joe: number;
 };
 
 type Props = {
@@ -127,7 +127,7 @@ const Liquidity: FC<Props> = ({ distribution }) => {
 
   const series = [
     { name: "AVAX", data: distribution.map((values) => values.avax) },
-    { name: "USDT", data: distribution.map((values) => values.usdt) },
+    { name: "JOE", data: distribution.map((values) => values.joe) },
   ];
   return (
     <Box width="100%">
