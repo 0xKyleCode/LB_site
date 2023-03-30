@@ -33,11 +33,9 @@ export const useCalcDistribution = (joeData: JoeInfoQuery, prices: Prices) => {
         return {
           binId: Number(value.binId),
           avax: Number(
-            (
-              Number(utils.formatEther(value.liquidity)) *
-              prices.AVAX *
-              (1 + (0.15 * (value.binId - centralBin)) / 100)
-            ).toFixed(2)
+            (Number(utils.formatEther(value.liquidity)) * prices.AVAX).toFixed(
+              2
+            )
           ),
           joe: 0,
         };
